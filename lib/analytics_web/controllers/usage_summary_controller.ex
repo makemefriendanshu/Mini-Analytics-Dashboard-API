@@ -10,13 +10,14 @@ defmodule AnalyticsWeb.UsageSummaryController do
                                         "user_id" => user,
                                         "timestamp" => time,
                                         "action_type" => action
-                                      } = item,
+                                      } = _item,
                                       {acc_user, acc_time, acc_action} ->
         {[user] ++ acc_user, [time] ++ acc_time, [action] ++ acc_action}
       end)
 
-    Enum.max_by(Enum.frequencies(acc_user), fn {_k, v} -> v end)
-    |> IO.inspect(label: "User Action")
+    acc_hours =
+      Enum.map(acc_time, fn x -> DateTime.from_iso8601(x) end)
+      |> Enum.map(fn {:ok, dt, _} -> dt.hour end)
 
     conn
     |> json(%{
@@ -26,6 +27,8 @@ defmodule AnalyticsWeb.UsageSummaryController do
         Enum.max_by(Enum.frequencies(acc_user), fn {_k, v} -> v end) |> Tuple.to_list(),
       peak_activity_time:
         Enum.max_by(Enum.frequencies(acc_time), fn {_k, v} -> v end) |> Tuple.to_list(),
+      peak_activity_hour:
+        Enum.max_by(Enum.frequencies(acc_hours), fn {_k, v} -> v end) |> Tuple.to_list(),
       message: "Usage summary generated successfully"
       # data: param
     })
