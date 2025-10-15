@@ -72,9 +72,6 @@ curl -X POST -H "Content-Type: application/json" \
 
 ## Result
 
-{"message":"Usage summary generated successfully","unique_users":["charlie","bob","alice"],"action_wise_counts":{"login":4,"logout":1,"purchase":1,"view":2},"most_active_user":["alice",3],"peak_activity_time":["2025-09-23T09:01:05Z",1]}
-
+{"message":"Usage summary generated successfully","unique_users":["charlie","bob","alice"],"action_wise_counts":{"login":4,"logout":1,"purchase":1,"view":2},"most_active_user":["alice",3],"peak_activity_time":["2025-09-23T09:01:05Z",1],"peak_activity_hour":[9,6]}
 
 [Screencast from 15-10-25 05:38:41 PM IST.webm](https://github.com/user-attachments/assets/8f4e1790-f752-4705-b27b-0d940b290b0d)
-
-
