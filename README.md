@@ -55,6 +55,8 @@ INPUT JSON:
 
 ## TO Run
 
+in cmd prompt -> mix phx.server
+
 curl -X POST -H "Content-Type: application/json" \
  --data '[
 {"user_id": "alice", "timestamp": "2025-09-23T09:10:01Z", "action_type": "login"},
@@ -71,5 +73,6 @@ curl -X POST -H "Content-Type: application/json" \
 ## Result
 
 {"message":"Usage summary generated successfully","unique_users":["charlie","bob","alice"],"action_wise_counts":{"login":4,"logout":1,"purchase":1,"view":2},"most_active_user":["alice",3],"peak_activity_time":["2025-09-23T09:01:05Z",1]}
+[Screencast from 15-10-25 05:38:41 PM IST.webm](https://github.com/user-attachments/assets/8f4e1790-f752-4705-b27b-0d940b290b0d)
 
-Send the code to akshyapadma.mohapatra@motorinc.com
+
