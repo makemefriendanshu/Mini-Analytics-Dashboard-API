@@ -1,0 +1,94 @@
+{
+  "info": {
+    "version": "1.0",
+    "description": "API Documentation for Analytics Application",
+    "title": "Analytics API",
+    "basePath": "/api"
+  },
+  "host": "localhost:4003",
+  "definitions": {
+    "Data": {
+      "description": "A single user action data point",
+      "example": {
+        "action_type": "login",
+        "timestamp": "2023-01-01T12:00:00Z",
+        "user_id": "Jane Doe"
+      },
+      "properties": {
+        "action_type": {
+          "description": "Type of action performed",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "ISO8601 formatted timestamp",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "ID of the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_type",
+        "timestamp",
+        "user_id"
+      ],
+      "title": "Data",
+      "type": "object"
+    },
+    "DataList": {
+      "example": [
+        {
+          "action_type": "login",
+          "timestamp": "2023-01-01T12:00:00Z",
+          "user_id": "Jane Doe"
+        },
+        {
+          "action_type": "logout",
+          "timestamp": "2023-01-01T12:05:00Z",
+          "user_id": "John Smith"
+        }
+      ],
+      "items": {
+        "$ref": "#/definitions/Data"
+      },
+      "title": "DataList",
+      "type": "array"
+    }
+  },
+  "paths": {
+    "/api/usage-summary": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "List usage summary",
+        "operationId": "AnalyticsWeb.UsageSummaryController.summary",
+        "parameters": [
+          {
+            "description": "data_list",
+            "in": "body",
+            "name": "data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DataList"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "UsageSummary"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0"
+}

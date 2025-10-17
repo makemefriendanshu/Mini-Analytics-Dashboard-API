@@ -13,7 +13,7 @@ config :analytics,
 
 # Configures the endpoint
 config :analytics, AnalyticsWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "localhost", port: String.to_integer(System.get_env("PORT") || "4003")],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: AnalyticsWeb.ErrorHTML, json: AnalyticsWeb.ErrorJSON],
@@ -30,6 +30,16 @@ config :analytics, AnalyticsWeb.Endpoint,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :analytics, Analytics.Mailer, adapter: Swoosh.Adapters.Local
+
+config :analytics, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # phoenix routes will be converted to swagger paths
+      router: AnalyticsWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: AnalyticsWeb.Endpoint
+    ]
+  }
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -59,6 +69,8 @@ config :logger, :default_formatter,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :phoenix_swagger, json_library: Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -5,7 +5,7 @@ To start your Phoenix server:
 - Run `mix setup` to install and setup dependencies
 - Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit [`localhost:4003`](http://localhost:4003) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
@@ -57,18 +57,20 @@ INPUT JSON:
 
 in cmd prompt -> mix phx.server
 
-curl -X POST -H "Content-Type: application/json" \
- --data '[
-{"user_id": "alice", "timestamp": "2025-09-23T09:10:01Z", "action_type": "login"},
-{"user_id": "bob", "timestamp": "2025-09-23T09:15:12Z", "action_type": "view"},
-{"user_id": "alice", "timestamp": "2025-09-23T10:03:23Z", "action_type": "purchase"},
-{"user_id": "alice", "timestamp": "2025-09-23T09:42:21Z", "action_type": "login"},
-{"user_id": "charlie", "timestamp": "2025-09-23T09:01:05Z", "action_type": "login"},
-{"user_id": "bob", "timestamp": "2025-09-23T11:13:45Z", "action_type": "logout"},
-{"user_id": "bob", "timestamp": "2025-09-23T09:55:32Z", "action_type": "login"},
-{"user_id": "charlie", "timestamp": "2025-09-23T09:23:02Z", "action_type": "view"}
-]' \
- http://localhost:4003/api/usage-summary
+1. http://localhost:4003/api/swagger
+
+2. curl -X POST -H "Content-Type: application/json" \
+    --data '[
+   {"user_id": "alice", "timestamp": "2025-09-23T09:10:01Z", "action_type": "login"},
+   {"user_id": "bob", "timestamp": "2025-09-23T09:15:12Z", "action_type": "view"},
+   {"user_id": "alice", "timestamp": "2025-09-23T10:03:23Z", "action_type": "purchase"},
+   {"user_id": "alice", "timestamp": "2025-09-23T09:42:21Z", "action_type": "login"},
+   {"user_id": "charlie", "timestamp": "2025-09-23T09:01:05Z", "action_type": "login"},
+   {"user_id": "bob", "timestamp": "2025-09-23T11:13:45Z", "action_type": "logout"},
+   {"user_id": "bob", "timestamp": "2025-09-23T09:55:32Z", "action_type": "login"},
+   {"user_id": "charlie", "timestamp": "2025-09-23T09:23:02Z", "action_type": "view"}
+   ]' \
+    http://localhost:4003/api/usage-summary
 
 ## Result
 

@@ -28,6 +28,21 @@ defmodule AnalyticsWeb.Router do
     post "/usage-summary", UsageSummaryController, :summary
   end
 
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Analytics API",
+        description: "API Documentation for Analytics Application",
+        basePath: "/api"
+      }
+    }
+  end
+
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :analytics, swagger_file: "swagger.json"
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:analytics, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
