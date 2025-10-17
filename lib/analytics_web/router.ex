@@ -1,4 +1,5 @@
 defmodule AnalyticsWeb.Router do
+  use PhoenixSwagger
   use AnalyticsWeb, :router
 
   pipeline :browser do
@@ -19,6 +20,7 @@ defmodule AnalyticsWeb.Router do
 
     get "/", PageController, :home
     resources "/users", UserController
+    get "/usage-summary", UsageSummaryController, :prompt
   end
 
   # Other scopes may use custom stacks.
@@ -28,14 +30,32 @@ defmodule AnalyticsWeb.Router do
     post "/usage-summary", UsageSummaryController, :summary
   end
 
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :analytics,
+      swagger_file: "swagger.json"
+  end
+
   def swagger_info do
     %{
+      schemes: ["http", "https"],
       info: %{
         version: "1.0",
         title: "Analytics API",
-        description: "API Documentation for Analytics Application",
-        basePath: "/api"
-      }
+        description: "API Documentation for Analytics v1",
+        termsOfService: "https://example.com/terms/",
+        contact: %{
+          name: "API Support",
+          url: "https://example.com/support",
+          email: "support@example.com"
+        },
+        license: %{
+          name: "MIT",
+          url: "https://opensource.org/licenses/MIT"
+        }
+      },
+      securityDefinitions: %{},
+      security: []
     }
   end
 

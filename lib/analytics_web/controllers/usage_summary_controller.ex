@@ -2,6 +2,11 @@ defmodule AnalyticsWeb.UsageSummaryController do
   use AnalyticsWeb, :controller
   use PhoenixSwagger
 
+  def prompt(conn, _params) do
+    # "Generate a usage summary report from the given user activity data, including unique users, action-wise counts, most active user, peak activity time, and peak activity hour."
+    render(conn, :prompt)
+  end
+
   swagger_path :summary do
     post("/api/usage-summary")
     description("List usage summary")
@@ -25,14 +30,40 @@ defmodule AnalyticsWeb.UsageSummaryController do
 
           example([
             %{
-              "user_id" => "Jane Doe",
-              "timestamp" => "2023-01-01T12:00:00Z",
+              "user_id" => "alice",
+              "timestamp" => "2025-09-23T09:10:01Z",
+              "action_type" => "login"
+            },
+            %{"user_id" => "bob", "timestamp" => "2025-09-23T09:15:12Z", "action_type" => "view"},
+            %{
+              "user_id" => "alice",
+              "timestamp" => "2025-09-23T10:03:23Z",
+              "action_type" => "purchase"
+            },
+            %{
+              "user_id" => "alice",
+              "timestamp" => "2025-09-23T09:42:21Z",
               "action_type" => "login"
             },
             %{
-              "user_id" => "John Smith",
-              "timestamp" => "2023-01-01T12:05:00Z",
+              "user_id" => "charlie",
+              "timestamp" => "2025-09-23T09:01:05Z",
+              "action_type" => "login"
+            },
+            %{
+              "user_id" => "bob",
+              "timestamp" => "2025-09-23T11:13:45Z",
               "action_type" => "logout"
+            },
+            %{
+              "user_id" => "bob",
+              "timestamp" => "2025-09-23T09:55:32Z",
+              "action_type" => "login"
+            },
+            %{
+              "user_id" => "charlie",
+              "timestamp" => "2025-09-24T09:23:02Z",
+              "action_type" => "view"
             }
           ])
         end,
@@ -77,14 +108,26 @@ defmodule AnalyticsWeb.UsageSummaryController do
     |> json(%{
       unique_users: Enum.uniq(acc_user),
       action_wise_counts: Enum.frequencies(acc_action),
+      action_user_wise_counts:
+        Enum.reduce(list, %{}, fn %{"action_type" => action, "user_id" => user}, acc ->
+          Map.update(acc, action, %{user => 1}, fn user_map ->
+            Map.update(user_map, user, 1, &(&1 + 1))
+          end)
+        end),
       most_active_user:
         case Enum.max_by(Enum.frequencies(acc_user), fn {_k, v} -> v end) do
           {k, v} -> %{value: k, count: v}
         end,
-      peak_activity_time:
-        case Enum.max_by(Enum.frequencies(acc_time), fn {_k, v} -> v end) do
-          {k, v} -> %{value: k, count: v}
-        end,
+      unique_days: Enum.uniq(Enum.map(acc_time, fn x -> String.slice(x, 0, 10) end)),
+      unique_days_hour_wise_counts:
+        Enum.reduce(acc_time, %{}, fn time, acc ->
+          day = String.slice(time, 0, 10)
+          hour = String.slice(time, 11, 2) |> String.to_integer()
+
+          Map.update(acc, day, %{hour => 1}, fn hour_map ->
+            Map.update(hour_map, hour, 1, &(&1 + 1))
+          end)
+        end),
       peak_activity_hour:
         case Enum.max_by(Enum.frequencies(acc_hours), fn {_k, v} -> v end) do
           {k, v} -> %{value: k, count: v}

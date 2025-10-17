@@ -33,5 +33,59 @@ analytics-*.tar
 
 # In case you use Node.js/npm, you want to ignore these.
 npm-debug.log
+yarn-debug.log
+yarn-error.log
 /assets/node_modules/
+
+# Environment files
+*.env
+.env
+.env.*
+
+# Database files
+*.db
+*.db-*
+
+# Phoenix specific
+/priv/static/
+/priv/cert/
+
+# Installer-related files
+installer/_build
+installer/tmp
+installer/doc
+installer/deps
+
+# Editor/IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Elixir Language Server
+.elixir_ls/
+
+# Mix release artifacts
+/rel/artifacts/
+/releases/
+
+# Local IEx configuration
+.iex.exs
+
+# Phoenix LiveView uploads temp directory
+/priv/static/uploads/
+
+# Phoenix temporary files
+/tmp/
+/log/
 

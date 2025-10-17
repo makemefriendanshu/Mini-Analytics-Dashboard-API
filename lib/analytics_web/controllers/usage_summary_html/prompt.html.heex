@@ -1,0 +1,45 @@
+<Layouts.app flash={@flash}>
+  <div class="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+    <div class="mx-auto max-w-xl text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+        Analytics Usage Summary
+      </h1>
+      <p class="mt-4 text-lg leading-8 text-zinc-600">
+        Submit a list of user actions to analyze usage patterns.
+      </p>
+      <div class="mt-10">
+          <label for="sample-input" class="sr-only">JSON payload</label>
+          <textarea id="sample-input" rows="10" class="w-full rounded-md border-gray-200 bg-white p-3 text-sm font-mono" spellcheck="false"><%= Jason.encode!(AnalyticsWeb.UsageSummaryHTML.sample_json(), pretty: true) %></textarea>
+
+        <p class="mt-4 text-sm text-zinc-600">
+          Submit POST request to <code class="bg-gray-100 px-2 py-1 rounded">/api/usage-summary</code>
+        </p>
+        <div class="mt-6 space-y-6">
+          <div class="flex items-center gap-4">
+            <button id="send-sample" class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">Send JSON from textbox</button>
+          </div>
+          <div class="mt-4">
+            <pre id="sample-response" class="whitespace-pre-wrap w-full max-h-96 h-64 overflow-auto rounded-md border bg-gray-50 p-4 text-sm"></pre>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div id="action-chart" class="w-full h-[300px]"></div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div id="user-chart" class="w-full h-[300px]"></div>
+            </div>
+          </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white rounded-lg shadow-sm border p-4">
+                <div id="action-user-chart" class="w-full h-[300px]"></div>
+              </div>
+              <div class="bg-white rounded-lg shadow-sm border p-4">
+                <div id="hour-chart" class="w-full h-[300px]"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layouts.app>

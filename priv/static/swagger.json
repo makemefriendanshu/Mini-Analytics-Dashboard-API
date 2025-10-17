@@ -1,12 +1,70 @@
 {
   "info": {
     "version": "1.0",
-    "description": "API Documentation for Analytics Application",
+    "description": "API Documentation for Analytics v1",
     "title": "Analytics API",
-    "basePath": "/api"
+    "termsOfService": "https://example.com/terms/",
+    "contact": {
+      "name": "API Support",
+      "url": "https://example.com/support",
+      "email": "support@example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
   },
   "host": "localhost:4003",
   "definitions": {
+    "DataList": {
+      "example": [
+        {
+          "action_type": "login",
+          "timestamp": "2025-09-23T09:10:01Z",
+          "user_id": "alice"
+        },
+        {
+          "action_type": "view",
+          "timestamp": "2025-09-23T09:15:12Z",
+          "user_id": "bob"
+        },
+        {
+          "action_type": "purchase",
+          "timestamp": "2025-09-23T10:03:23Z",
+          "user_id": "alice"
+        },
+        {
+          "action_type": "login",
+          "timestamp": "2025-09-23T09:42:21Z",
+          "user_id": "alice"
+        },
+        {
+          "action_type": "login",
+          "timestamp": "2025-09-23T09:01:05Z",
+          "user_id": "charlie"
+        },
+        {
+          "action_type": "logout",
+          "timestamp": "2025-09-23T11:13:45Z",
+          "user_id": "bob"
+        },
+        {
+          "action_type": "login",
+          "timestamp": "2025-09-23T09:55:32Z",
+          "user_id": "bob"
+        },
+        {
+          "action_type": "view",
+          "timestamp": "2025-09-24T09:23:02Z",
+          "user_id": "charlie"
+        }
+      ],
+      "items": {
+        "$ref": "#/definitions/Data"
+      },
+      "title": "DataList",
+      "type": "array"
+    },
     "Data": {
       "description": "A single user action data point",
       "example": {
@@ -35,27 +93,14 @@
       ],
       "title": "Data",
       "type": "object"
-    },
-    "DataList": {
-      "example": [
-        {
-          "action_type": "login",
-          "timestamp": "2023-01-01T12:00:00Z",
-          "user_id": "Jane Doe"
-        },
-        {
-          "action_type": "logout",
-          "timestamp": "2023-01-01T12:05:00Z",
-          "user_id": "John Smith"
-        }
-      ],
-      "items": {
-        "$ref": "#/definitions/Data"
-      },
-      "title": "DataList",
-      "type": "array"
     }
   },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {},
+  "security": [],
   "paths": {
     "/api/usage-summary": {
       "post": {

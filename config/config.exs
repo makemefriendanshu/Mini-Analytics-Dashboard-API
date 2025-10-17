@@ -11,6 +11,18 @@ config :analytics,
   ecto_repos: [Analytics.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :phoenix_swagger, json_library: Jason
+
+config :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # Phoenix routes will be converted to swagger paths
+      router: AnalyticsWeb.Router,
+      # List of controller modules for which swagger paths will be generated
+      controllers: [AnalyticsWeb.UsageSummaryController]
+    ]
+  }
+
 # Configures the endpoint
 config :analytics, AnalyticsWeb.Endpoint,
   url: [host: "localhost", port: String.to_integer(System.get_env("PORT") || "4003")],

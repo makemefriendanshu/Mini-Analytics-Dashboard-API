@@ -1,0 +1,405 @@
+// Import only the D3 modules we need to minimize bundle size
+import { select, scaleBand, scaleLinear, max, axisBottom, axisLeft } from "d3";
+
+// Renders bar charts for the analytics response
+function renderStackedBarChart(selector, data, title) {
+  const container = select(selector).node();
+  if (!container) return;
+
+  const margin = { top: 30, right: 20, bottom: 50, left: 50 };
+
+  // Get dimensions from container
+  const containerWidth = container.offsetWidth || 400;
+  const containerHeight = container.offsetHeight || 300;
+
+  const width = containerWidth - margin.left - margin.right;
+  const height = containerHeight - margin.top - margin.bottom;
+
+  const svg = select(selector)
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Add title
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", -margin.top / 2)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .text(title);
+
+  // Create scales
+  const x = scaleBand()
+    .domain(data.map(d => d.action))
+    .range([0, width])
+    .padding(0.2);
+
+  const y = scaleLinear()
+    .domain([0, max(data, d => d.users.reduce((sum, user) => sum + user.count, 0))])
+    .nice()
+    .range([height, 0]);
+
+  // Add axes
+  svg.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(axisBottom(x))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-45)");
+
+  svg.append("g")
+    .call(axisLeft(y));
+
+  // Calculate stack positions
+  data.forEach(d => {
+    let y0 = 0;
+    d.users.forEach(user => {
+      user.y0 = y0;
+      user.y1 = y0 + user.count;
+      y0 = user.y1;
+    });
+  });
+
+  // Add stacked bars
+  const colors = ["rgb(79, 70, 229)", "rgb(59, 130, 246)", "rgb(16, 185, 129)", "rgb(245, 158, 11)"];
+  data.forEach((d, i) => {
+    svg.selectAll(`.bar-${i}`)
+      .data(d.users)
+      .join("rect")
+      .attr("class", `bar-${i}`)
+      .attr("x", x(d.action))
+      .attr("y", height)
+      .attr("width", x.bandwidth())
+      .attr("height", 0)
+      .attr("fill", (_, j) => colors[j % colors.length])
+      .transition()
+      .duration(1000)
+      .attr("y", user => y(user.y1))
+      .attr("height", user => y(user.y0) - y(user.y1));
+  });
+}
+export function renderCharts(data) {
+  if (!data) return;
+
+  // Clear previous charts
+  select("#action-chart").html("");
+  select("#user-chart").html("");
+    // Extract data for action-user-wise counts
+    const actionUserData = Object.entries(data.action_user_wise_counts)
+      .map(([action, users]) => ({
+        action,
+        users: Object.entries(users).map(([user, count]) => ({ user, count }))
+      // Extract data for action-user-wise counts
+      const actionUserData = Object.entries(data.action_user_wise_counts || {})
+        .map(([action, users]) => ({
+          action,
+          users: Object.entries(users).map(([user, count]) => ({ user, count }))
+        }));
+
+      // Extract hour-wise unique user counts
+      const hourData = Object.entries(data.unique_days_hour_wise_counts || {})
+        .map(([hour, count]) => ({
+          name: `${hour}:00`,
+          count: typeof count === 'number' ? count : Object.keys(count).length
+        }))
+        .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+      }));
+
+    // Extract hour-wise unique user counts
+    const hourData = Object.entries(data.unique_days_hour_wise_counts || {})
+      .map(([hour, count]) => ({
+        name: `${hour}:00`,
+        count: typeof count === 'number' ? count : Object.keys(count).length
+      }))
+      .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+
+      renderStackedBarChart("#action-user-chart", actionUserData, "Actions by User");
+      renderBarChart("#hour-chart", hourData, "Activity by Hour");
+
+function renderStackedBarChart(selector, data, title) {
+  const container = select(selector).node();
+  const margin = { top: 30, right: 20, bottom: 50, left: 50 };
+
+  // Get dimensions from container
+  const containerWidth = container.offsetWidth || 400;
+  const containerHeight = container.offsetHeight || 300;
+
+  const width = containerWidth - margin.left - margin.right;
+  const height = containerHeight - margin.top - margin.bottom;
+
+  const svg = select(selector)
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Add title
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", -margin.top / 2)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .text(title);
+
+  // Create scales
+  const x = scaleBand()
+    .domain(data.map(d => d.action))
+    .range([0, width])
+    .padding(0.2);
+
+  const y = scaleLinear()
+    .domain([0, max(data, d => d.users.reduce((sum, user) => sum + user.count, 0))])
+    .nice()
+    .range([height, 0]);
+
+  // Add axes
+  svg.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(axisBottom(x))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-45)");
+
+  svg.append("g")
+    .call(axisLeft(y));
+
+  // Calculate stack positions
+  data.forEach(d => {
+    let y0 = 0;
+    d.users.forEach(user => {
+      user.y0 = y0;
+      user.y1 = y0 + user.count;
+      y0 = user.y1;
+    });
+  });
+
+  // Add stacked bars
+  const colors = ["rgb(79, 70, 229)", "rgb(59, 130, 246)", "rgb(16, 185, 129)", "rgb(245, 158, 11)"];
+  data.forEach((d, i) => {
+    svg.selectAll(`.bar-${i}`)
+      .data(d.users)
+      .join("rect")
+      .attr("class", `bar-${i}`)
+      .attr("x", x(d.action))
+      .attr("y", height)
+      .attr("width", x.bandwidth())
+      .attr("height", 0)
+      .attr("fill", (_, j) => colors[j % colors.length])
+      .transition()
+      .duration(1000)
+      .attr("y", user => y(user.y1))
+      .attr("height", user => y(user.y0) - y(user.y1));
+  });
+}
+  // Extract data for action-wise counts
+  const actionData = Object.entries(data.action_wise_counts).map(
+    ([name, count]) => ({ name, count })
+  );
+
+  // Extract data for most active users from action_user_wise_counts
+  const userData = Object.entries(data.action_user_wise_counts)
+    .flatMap(([action, users]) =>
+      Object.entries(users).map(([name, count]) => ({ name, count, action }))
+    )
+    .reduce((acc, { name, count }) => {
+      acc[name] = (acc[name] || 0) + count;
+      return acc;
+    }, {});
+
+  const userDataArray = Object.entries(userData).map(([name, count]) => ({
+    name,
+    renderStackedBarChart("#action-user-chart", actionUserData, "Actions by User");
+    renderBarChart("#hour-chart", hourData, "Activity by Hour");
+    count,
+  }));
+
+  // Render both charts
+  renderBarChart("#action-chart", actionData, "Actions by Type");
+  renderBarChart("#user-chart", userDataArray, "User Activity");
+}
+
+function renderBarChart(selector, data, title) {
+  const container = select(selector).node();
+  const margin = { top: 30, right: 20, bottom: 50, left: 50 };
+
+  // Get dimensions from container
+  const containerWidth = container.offsetWidth || 400;
+  const containerHeight = container.offsetHeight || 300;
+
+  const width = containerWidth - margin.left - margin.right;
+  const height = containerHeight - margin.top - margin.bottom;
+
+  const svg = select(selector)
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Add title
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", -margin.top / 2)
+    .attr("text-anchor", "middle")
+    .attr("class", "text-sm font-semibold")
+    .text(title);
+
+  // X axis
+  const x = scaleBand()
+    .range([0, width])
+    .domain(data.map((d) => d.name))
+    .padding(0.2);
+
+  const xAxis = svg
+    .append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(axisBottom(x));
+
+  xAxis
+    .selectAll("text")
+    .attr("transform", "translate(-8,8)rotate(-30)")
+    .style("text-anchor", "end")
+    .style("font-size", "12px");
+
+  // Y axis
+  const y = scaleLinear()
+    .domain([0, max(data, (d) => d.count)])
+    .range([height, 0]);
+
+  const yAxis = svg.append("g").call(axisLeft(y));
+
+  // Add transition to axes
+  xAxis.transition().duration(500).call(axisBottom(x));
+  yAxis.transition().duration(500).call(axisLeft(y));
+
+  // Bars
+  svg
+    .selectAll("rect")
+    .data(data)
+  function renderStackedBarChart(selector, data, title) {
+    const container = select(selector).node();
+    const margin = { top: 30, right: 20, bottom: 50, left: 50 };
+
+    // Get dimensions from container
+    const containerWidth = container.offsetWidth || 400;
+    const containerHeight = container.offsetHeight || 300;
+
+    const width = containerWidth - margin.left - margin.right;
+    const height = containerHeight - margin.top - margin.bottom;
+
+    const svg = select(selector)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Add title
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", -margin.top / 2)
+      .attr("text-anchor", "middle")
+      .style("font-size", "16px")
+      .text(title);
+
+    // Create scales
+    const x = scaleBand()
+      .domain(data.map(d => d.action))
+      .range([0, width])
+      .padding(0.2);
+
+    const y = scaleLinear()
+      .domain([0, max(data, d => d.users.reduce((sum, user) => sum + user.count, 0))])
+      .nice()
+      .range([height, 0]);
+
+    // Add axes
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(axisBottom(x))
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-45)");
+
+    svg.append("g")
+      .call(axisLeft(y));
+
+    // Calculate stack positions
+    data.forEach(d => {
+      let y0 = 0;
+      d.users.forEach(user => {
+        user.y0 = y0;
+        user.y1 = y0 + user.count;
+        y0 = user.y1;
+      });
+    });
+
+    // Add stacked bars
+    const colors = ["rgb(79, 70, 229)", "rgb(59, 130, 246)", "rgb(16, 185, 129)", "rgb(245, 158, 11)"];
+    data.forEach((d, i) => {
+      svg.selectAll(`.bar-${i}`)
+        .data(d.users)
+        .join("rect")
+        .attr("class", `bar-${i}`)
+        .attr("x", x(d.action))
+        .attr("y", height)
+        .attr("width", x.bandwidth())
+        .attr("height", 0)
+        .attr("fill", (_, j) => colors[j % colors.length])
+        .transition()
+        .duration(1000)
+        .attr("y", user => y(user.y1))
+        .attr("height", user => y(user.y0) - y(user.y1));
+    });
+  }
+    .join(
+      (enter) =>
+        enter
+          .append("rect")
+          .attr("x", (d) => x(d.name))
+          .attr("y", height)
+          .attr("width", x.bandwidth())
+          .attr("height", 0)
+          .attr("fill", "#4f46e5")
+          .call((enter) =>
+            enter
+              .transition()
+              .duration(500)
+              .attr("y", (d) => y(d.count))
+              .attr("height", (d) => height - y(d.count))
+          ),
+      (update) =>
+        update.call((update) =>
+          update
+            .transition()
+            .duration(500)
+            .attr("x", (d) => x(d.name))
+            .attr("y", (d) => y(d.count))
+            .attr("width", x.bandwidth())
+            .attr("height", (d) => height - y(d.count))
+        ),
+      (exit) =>
+        exit.call((exit) =>
+          exit
+            .transition()
+            .duration(200)
+            .attr("y", height)
+            .attr("height", 0)
+            .remove()
+        )
+    )
+    .attr("fill", "#4f46e5")
+    .attr("class", "hover:fill-indigo-400");
+}
+
+export default { renderCharts };
