@@ -1,22 +1,33 @@
-## Mini Analytics Dashboard API
+# Mini Analytics Dashboard API
 
 Objective:
 
-Build a simplified backend REST API for an analytics dashboard that summarizes and visualizes usage statistics of a service, using any preferred language from their skillset (Python, Go, or Rust).
-Requirements
+Build a simplified backend REST API for an analytics dashboard that summarizes and visualizes usage statistics of a service, using any preferred language from their skillset (Elixir, Python, Go, or Rust).
+
+## Requirements
 REST Endpoint:
-/usage-summary
+
+*/usage-summary*
+
 Accepts a list of (user_id, timestamp, action_type) as JSON input (simulating usage logs).
+
 Returns a JSON summary containing:
+
 Total number of unique users
 Action-wise counts (how many times each action_type occurred)
+
 Most active user (user_id with the most actions)
+
 Time window with highest activity (hour with most log entries)
+
 Bonus:
+
 “/health” endpoint that checks server status (and any dependencies, if implemented).
+
 If time allows, serve a simple HTML page with a D3.js (or chart library) visualization of action counts (not required for completion, for extra credit).
+
 Guidelines
-You can choose your stack (Go, Python, Rust).
+You can choose your stack (Elixir, Go, Python, Rust).
 All logic should be within a single file for simplicity.
 Must show understanding of REST APIs, data aggregation, and efficient counting.
 Use of any in-memory structure (dicts/maps/etc.), no DB needed.
