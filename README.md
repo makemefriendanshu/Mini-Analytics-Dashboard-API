@@ -1,22 +1,3 @@
-# Analytics
-
-To start your Phoenix server:
-
-- Run `mix setup` to install and setup dependencies
-- Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
-
-Now you can visit [`localhost:4003`](http://localhost:4003) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-- Official website: https://www.phoenixframework.org/
-- Guides: https://hexdocs.pm/phoenix/overview.html
-- Docs: https://hexdocs.pm/phoenix
-- Forum: https://elixirforum.com/c/phoenix-forum
-- Source: https://github.com/phoenixframework/phoenix
-
 ## Mini Analytics Dashboard API
 
 Objective:
@@ -77,3 +58,6 @@ in cmd prompt -> mix phx.server
 {"message":"Usage summary generated successfully","unique_users":["charlie","bob","alice"],"action_wise_counts":{"login":4,"logout":1,"purchase":1,"view":2},"most_active_user":["alice",3],"peak_activity_time":["2025-09-23T09:01:05Z",1],"peak_activity_hour":[9,6]}
 
 [Screencast from 15-10-25 05:38:41 PM IST.webm](https://github.com/user-attachments/assets/8f4e1790-f752-4705-b27b-0d940b290b0d)
+
+[Screencast from 17-10-25 10:19:48 PM IST.webm](https://github.com/user-attachments/assets/50aab187-1a0d-495c-b33e-01971e7f5320)
+
