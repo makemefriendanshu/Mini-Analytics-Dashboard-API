@@ -10,7 +10,6 @@ export function renderCharts(data) {
   select("#user-chart").html("");
   select("#action-user-chart").html("");
   select("#hour-chart").html("");
-  select("#unique-dates-hour-chart").html("");
 
   // Extract data for action-wise counts
   const actionData = Object.entries(data.action_wise_counts).map(
@@ -44,27 +43,6 @@ export function renderCharts(data) {
     hourData.sort((a, b) => parseInt(a.name) - parseInt(b.name));
   }
 
-  // Create unique-dates hour stacked data (date -> { hour: count })
-  const uniqueDatesHourMap = {};
-  if (data.unique_dates_hour_wise_counts) {
-    for (const [date, hourMap] of Object.entries(
-      data.unique_dates_hour_wise_counts
-    )) {
-      for (const [hourKey, cnt] of Object.entries(hourMap)) {
-        const hour = String(hourKey).padStart(2, "0");
-        if (!uniqueDatesHourMap[hour]) uniqueDatesHourMap[hour] = [];
-        uniqueDatesHourMap[hour].push({
-          user: date,
-          count: typeof cnt === "number" ? cnt : Number(cnt) || 0,
-        });
-      }
-    }
-  }
-  const uniqueDatesHourData = Object.entries(uniqueDatesHourMap).map(
-    ([hour, users]) => ({ action: `${hour}:00`, users })
-  );
-  uniqueDatesHourData.sort((a, b) => parseInt(a.action) - parseInt(b.action));
-
   // Extract data for most active users
   const userCounts = {};
   if (data.action_user_wise_counts) {
@@ -91,30 +69,6 @@ export function renderCharts(data) {
   }
   if (hourData.length > 0) {
     renderBarChart("#hour-chart", hourData, "Activity by Hour");
-  }
-  if (uniqueDatesHourData.length > 0) {
-    // ensure container exists; if not, try to insert after #hour-chart or append to body
-    if (!select("#unique-dates-hour-chart").node()) {
-      const ref = select("#hour-chart").node();
-      if (ref && ref.parentNode) {
-        const nd = document.createElement("div");
-        nd.id = "unique-dates-hour-chart";
-        nd.style.width = "100%";
-        nd.style.height = "300px";
-        ref.parentNode.insertBefore(nd, ref.nextSibling);
-      } else {
-        const nd = document.createElement("div");
-        nd.id = "unique-dates-hour-chart";
-        nd.style.width = "100%";
-        nd.style.height = "300px";
-        document.body.appendChild(nd);
-      }
-    }
-    renderStackedBarChart(
-      "#unique-dates-hour-chart",
-      uniqueDatesHourData,
-      "Unique Dates by Hour"
-    );
   }
 }
 
@@ -253,13 +207,28 @@ function renderStackedBarChart(selector, data, title) {
     });
   });
 
-  // Add stacked bars
+  // Define colors before using in stacked bars
   const colors = [
     "rgb(79, 70, 229)",
     "rgb(59, 130, 246)",
     "rgb(16, 185, 129)",
     "rgb(245, 158, 11)",
   ];
+
+  // Add stacked bars with hover tooltip
+  const tooltip = select("body")
+    .append("div")
+    .attr("class", "chart-tooltip")
+    .style("position", "absolute")
+    .style("background", "#fff")
+    .style("border", "1px solid #ccc")
+    .style("padding", "6px 10px")
+    .style("border-radius", "6px")
+    .style("pointer-events", "none")
+    .style("font-size", "13px")
+    .style("box-shadow", "0 2px 8px rgba(0,0,0,0.12)")
+    .style("display", "none");
+
   data.forEach((d, i) => {
     svg
       .selectAll(`.bar-${i}`)
@@ -271,6 +240,18 @@ function renderStackedBarChart(selector, data, title) {
       .attr("width", x.bandwidth())
       .attr("height", 0)
       .attr("fill", (_, j) => colors[j % colors.length])
+      .on("mousemove", function (event, user) {
+        tooltip
+          .style("display", "block")
+          .html(
+            `<strong>User:</strong> ${user.user}<br><strong>Count:</strong> ${user.count}`
+          )
+          .style("left", event.pageX + 12 + "px")
+          .style("top", event.pageY - 18 + "px");
+      })
+      .on("mouseout", function () {
+        tooltip.style("display", "none");
+      })
       .transition()
       .duration(1000)
       .attr("y", (user) => y(user.y1))
