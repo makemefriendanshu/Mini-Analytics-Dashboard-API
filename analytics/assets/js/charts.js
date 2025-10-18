@@ -67,8 +67,16 @@ export function renderCharts(data) {
       "Actions by User"
     );
   }
+  // Replace Activity by Hour chart with stacked bar chart
   if (hourData.length > 0) {
-    renderBarChart("#hour-chart", hourData, "Activity by Hour");
+    // Convert hourData to stacked format: each hour is an action, users are keys
+    const stackedHourData = hourData.map((d) => ({
+      action: d.name,
+      users: Object.entries(
+        data.unique_days_hour_wise_counts[d.name.replace(":00", "")]
+      ).map(([user, count]) => ({ user, count })),
+    }));
+    renderStackedBarChart("#hour-chart", stackedHourData, "Activity by Dates");
   }
 }
 
@@ -241,10 +249,13 @@ function renderStackedBarChart(selector, data, title) {
       .attr("height", 0)
       .attr("fill", (_, j) => colors[j % colors.length])
       .on("mousemove", function (event, user) {
+        const isDatesChart = title === "Activity by Dates";
         tooltip
           .style("display", "block")
           .html(
-            `<strong>User:</strong> ${user.user}<br><strong>Count:</strong> ${user.count}`
+            isDatesChart
+              ? `<strong>Hour:</strong> ${user.user}<br><strong>Count:</strong> ${user.count}`
+              : `<strong>User:</strong> ${user.user}<br><strong>Count:</strong> ${user.count}`
           )
           .style("left", event.pageX + 12 + "px")
           .style("top", event.pageY - 18 + "px");
