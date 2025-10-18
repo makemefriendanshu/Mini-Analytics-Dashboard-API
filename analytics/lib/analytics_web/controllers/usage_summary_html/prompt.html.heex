@@ -1,10 +1,10 @@
 <Layouts.app flash={@flash}>
-  <div class="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-    <div class="mx-auto max-w-xl text-center">
-      <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+  <div class="py-10 px-4 sm:px-6 sm:py-12 lg:px-8 lg:py-16 bg-base-200 min-h-screen">
+    <div class="mx-auto max-w-xl text-center card bg-base-100 shadow-xl p-8">
+      <h1 class="text-3xl font-bold tracking-tight text-primary sm:text-4xl mb-2">
         Analytics Usage Summary
       </h1>
-      <p class="mt-4 text-lg leading-8 text-zinc-600">
+      <p class="mt-4 text-lg leading-8 text-base-content mb-6">
         Submit a list of user actions to analyze usage patterns.
       </p>
       <div class="mt-10">
@@ -14,10 +14,12 @@
             <span class="font-semibold text-blue-700">JSON Input Information</span>
           </div>
           <div class="mt-2 text-sm text-blue-700">
-            Enter a JSON array of user actions. Each object should include:<br>
-            <span class="font-mono">user_id</span> (string), <span class="font-mono">timestamp</span> (ISO8601), <span class="font-mono">action_type</span> (string).<br>
+            Enter a JSON array of user actions below.<br>
+            <span class="badge badge-outline badge-info mx-1">user_id</span> <span class="text-base-content">(string),</span>
+            <span class="badge badge-outline badge-info mx-1">timestamp</span> <span class="text-base-content">(ISO8601),</span>
+            <span class="badge badge-outline badge-info mx-1">action_type</span> <span class="text-base-content">(string)</span>.<br>
             Example:<br>
-            <pre class="bg-blue-100 rounded p-2 mt-2 text-xs whitespace-pre-line">
+            <pre class="bg-base-200 rounded p-2 mt-2 text-xs whitespace-pre-line border border-base-300">
               <code><%= raw("""
               [
                 {\"user_id\": \"alice\", \"timestamp\": \"2025-09-23T09:10:01Z\", \"action_type\": \"login\"},
@@ -28,39 +30,40 @@
             </pre>
           </div>
         </div>
-          <label for="sample-input" class="sr-only">JSON payload</label>
-          <textarea id="sample-input" rows="10" class="w-full rounded-md border-gray-200 bg-white p-3 text-sm font-mono" spellcheck="false"><%= Jason.encode!(AnalyticsWeb.UsageSummaryHTML.sample_json(), pretty: true) %></textarea>
+        <label for="sample-input" class="sr-only">JSON payload</label>
+        <textarea id="sample-input" rows="10" class="textarea textarea-bordered w-full font-mono mb-4" spellcheck="false"><%= Jason.encode!(AnalyticsWeb.UsageSummaryHTML.sample_json(), pretty: true) %></textarea>
 
-        <p class="mt-4 text-sm text-zinc-600">
-          Submit POST request to <code class="bg-gray-100 px-2 py-1 rounded">/api/usage-summary</code>
-          <a href="/api/swagger" class="ml-2 text-indigo-600 hover:text-indigo-500">
+        <p class="mt-4 text-sm text-base-content mb-4">
+          Submit POST request to <code class="badge badge-ghost">/api/usage-summary</code>
+          <a href="/api/swagger" class="ml-2 link link-primary">
             View API Documentation →
           </a>
         </p>
         <div class="mt-6 space-y-6">
-          <div class="flex items-center gap-4">
-            <button id="send-sample" class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">Send JSON from textbox</button>
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 mb-4">
+            <button id="generate-sample" class="btn btn-success w-full sm:w-auto mb-2 sm:mb-0">Generate Random JSON</button>
+            <button id="send-sample" class="btn btn-primary w-full sm:w-auto text-base sm:text-sm py-3 sm:py-2 px-4 sm:px-4 font-bold tracking-wide shadow-md transition-all duration-150 ease-in-out">Send JSON from textbox</button>
           </div>
           <div class="mt-4">
-            <pre id="sample-response" class="whitespace-pre-wrap w-full max-h-96 h-64 overflow-auto rounded-md border bg-gray-50 p-4 text-sm"></pre>
+            <pre id="sample-response" class="whitespace-pre-wrap w-full max-h-96 h-64 overflow-auto rounded-md border bg-base-200 p-4 text-sm"></pre>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-white rounded-lg shadow-sm border p-4">
+          <div id="charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+            <div class="bg-base-100 rounded-lg shadow-sm border p-4">
               <div id="action-chart" class="w-full h-[300px]"></div>
             </div>
-            <div class="bg-white rounded-lg shadow-sm border p-4">
+            <div class="bg-base-100 rounded-lg shadow-sm border p-4">
               <div id="user-chart" class="w-full h-[300px]"></div>
             </div>
           </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-white rounded-lg shadow-sm border p-4">
-                <div id="action-user-chart" class="w-full h-[300px]"></div>
-              </div>
-              <div class="bg-white rounded-lg shadow-sm border p-4">
-                <div id="hour-chart" class="w-full h-[300px]"></div>
-              </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-base-100 rounded-lg shadow-sm border p-4">
+              <div id="action-user-chart" class="w-full h-[300px]"></div>
             </div>
+            <div class="bg-base-100 rounded-lg shadow-sm border p-4">
+              <div id="hour-chart" class="w-full h-[300px]"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
