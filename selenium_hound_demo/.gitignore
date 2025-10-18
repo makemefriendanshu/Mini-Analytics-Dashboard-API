@@ -1,0 +1,31 @@
+# Elixir/Phoenix .gitignore
+/_build/
+/deps/
+/.elixir_ls/
+/.formatter.exs
+/.iex.exs
+/.tool-versions
+/.env*
+/node_modules/
+/assets/node_modules/
+*.ez
+*.beam
+*.dump
+*.log
+*.swp
+*.bak
+*.tmp
+*.DS_Store
+*.cover
+*.plt
+*.pid
+*.tar.gz
+*.secret
+priv/static/
+priv/repo/
+.env
+.env.*
+coverage/
+
+# VS Code
+.vscode/

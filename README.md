@@ -1,82 +1,45 @@
-# Mini Analytics Dashboard API
+# Mini-Analytics-Dashboard-API
 
-## Objective:
+This repository contains:
 
-Build a simplified backend REST API for an analytics dashboard that summarizes and visualizes usage statistics of a service, using any preferred language from their skillset (Elixir, Python, Go, or Rust).
+- A Phoenix analytics dashboard application (`analytics`)
+- Selenium Hound browser automation demo (`selenium_hound_demo`)
+- PowerShell integration scripts (`pwsh_script.ps1`)
 
-## Requirements
-REST Endpoint:
+## Features
 
-*/usage-summary*
+- Analytics dashboard with interactive charts and summary views
+- Automated browser testing using Elixir and Hound
+- PowerShell script to launch the full workflow (Phoenix app, ChromeDriver, automation)
 
-Accepts a list of (user_id, timestamp, action_type) as JSON input (simulating usage logs).
+## Quick Start
 
-Returns a JSON summary containing:
-
-Total number of unique users
-Action-wise counts (how many times each action_type occurred)
-Most active user (user_id with the most actions)
-Time window with highest activity (hour with most log entries)
-
-Bonus:
-
-“/health” endpoint that checks server status (and any dependencies, if implemented).
-If time allows, serve a simple HTML page with a D3.js (or chart library) visualization of action counts (not required for completion, for extra credit).
-
-Guidelines
-You can choose your stack (Elixir, Go, Python, Rust).
-All logic should be within a single file for simplicity.
-Must show understanding of REST APIs, data aggregation, and efficient counting.
-Use of any in-memory structure (dicts/maps/etc.), no DB needed.
-Add basic error handling in endpoints.
-
-INPUT JSON:
-```
-[
-{"user_id": "alice", "timestamp": "2025-09-23T09:10:01Z", "action_type": "login"},
-{"user_id": "bob", "timestamp": "2025-09-23T09:15:12Z", "action_type": "view"},
-{"user_id": "alice", "timestamp": "2025-09-23T10:03:23Z", "action_type": "purchase"},
-{"user_id": "alice", "timestamp": "2025-09-23T09:42:21Z", "action_type": "login"},
-{"user_id": "charlie", "timestamp": "2025-09-23T09:01:05Z", "action_type": "login"},
-{"user_id": "bob", "timestamp": "2025-09-23T11:13:45Z", "action_type": "logout"},
-{"user_id": "bob", "timestamp": "2025-09-23T09:55:32Z", "action_type": "login"},
-{"user_id": "charlie", "timestamp": "2025-09-23T09:23:02Z", "action_type": "view"}
-]
-```
-
-## TO Run
-
-in cmd prompt -> 
-```mix phx.server```
-
-1. http://localhost:4003/api/swagger
-
-2. ```
-   curl -X POST -H "Content-Type: application/json" \
-    --data '[
-   {"user_id": "alice", "timestamp": "2025-09-23T09:10:01Z", "action_type": "login"},
-   {"user_id": "bob", "timestamp": "2025-09-23T09:15:12Z", "action_type": "view"},
-   {"user_id": "alice", "timestamp": "2025-09-23T10:03:23Z", "action_type": "purchase"},
-   {"user_id": "alice", "timestamp": "2025-09-23T09:42:21Z", "action_type": "login"},
-   {"user_id": "charlie", "timestamp": "2025-09-23T09:01:05Z", "action_type": "login"},
-   {"user_id": "bob", "timestamp": "2025-09-23T11:13:45Z", "action_type": "logout"},
-   {"user_id": "bob", "timestamp": "2025-09-23T09:55:32Z", "action_type": "login"},
-   {"user_id": "charlie", "timestamp": "2025-09-23T09:23:02Z", "action_type": "view"}
-   ]' \
-    http://localhost:4003/api/usage-summary
+1. Install dependencies for Elixir, Phoenix, Node.js, and ChromeDriver
+2. Start the Phoenix analytics app:
+   ```bash
+   cd analytics
+   mix phx.server
+   ```
+3. Start ChromeDriver:
+   ```bash
+   chromedriver --port=9515 &
+   ```
+4. Run browser automation:
+   ```bash
+   cd selenium_hound_demo
+   mix run run_clicker.exs
+   ```
+5. Or use the PowerShell script:
+   ```bash
+   pwsh -File pwsh_script.ps1
    ```
 
-## Result
+## Folder Structure
 
-```
-{"message":"Usage summary generated successfully","unique_users":["charlie","bob","alice"],"action_wise_counts":{"login":4,"logout":1,"purchase":1,"view":2},"most_active_user":{"count":3,"value":"alice"},"peak_activity_time":{"count":1,"value":"2025-09-23T09:01:05Z"},"peak_activity_hour":{"count":6,"value":9}}
-```
+- `analytics/` - Phoenix dashboard app
+- `selenium_hound_demo/` - Elixir Hound automation
+- `pwsh_script.ps1` - PowerShell integration script
 
-[Screencast from 15-10-25 05:38:41 PM IST.webm](https://github.com/user-attachments/assets/8f4e1790-f752-4705-b27b-0d940b290b0d)
+## License
 
-[Screencast from 17-10-25 10:19:48 PM IST.webm](https://github.com/user-attachments/assets/50aab187-1a0d-495c-b33e-01971e7f5320)
-
-[Screencast from 18-10-25 03:55:22 AM IST.webm](https://github.com/user-attachments/assets/ace3b309-14cf-410d-ae63-5e2f2478e06a)
-
-
-
+MIT
