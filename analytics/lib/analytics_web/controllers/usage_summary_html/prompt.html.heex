@@ -8,6 +8,26 @@
         Submit a list of user actions to analyze usage patterns.
       </p>
       <div class="mt-10">
+        <div class="mb-6 rounded-md border-l-4 border-blue-400 bg-blue-50 p-4 text-left">
+          <div class="flex items-center">
+            <svg class="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"/></svg>
+            <span class="font-semibold text-blue-700">JSON Input Information</span>
+          </div>
+          <div class="mt-2 text-sm text-blue-700">
+            Enter a JSON array of user actions. Each object should include:<br>
+            <span class="font-mono">user_id</span> (string), <span class="font-mono">timestamp</span> (ISO8601), <span class="font-mono">action_type</span> (string).<br>
+            Example:<br>
+            <pre class="bg-blue-100 rounded p-2 mt-2 text-xs whitespace-pre-line">
+              <code><%= raw("""
+              [
+                {\"user_id\": \"alice\", \"timestamp\": \"2025-09-23T09:10:01Z\", \"action_type\": \"login\"},
+                {\"user_id\": \"bob\", \"timestamp\": \"2025-09-23T09:15:12Z\", \"action_type\": \"view\"}
+              ]
+              """) %>
+             </code>
+            </pre>
+          </div>
+        </div>
           <label for="sample-input" class="sr-only">JSON payload</label>
           <textarea id="sample-input" rows="10" class="w-full rounded-md border-gray-200 bg-white p-3 text-sm font-mono" spellcheck="false"><%= Jason.encode!(AnalyticsWeb.UsageSummaryHTML.sample_json(), pretty: true) %></textarea>
 
